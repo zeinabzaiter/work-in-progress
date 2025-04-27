@@ -21,7 +21,10 @@ def calculate_tukey_alerts(df):
     
     # Calculer IQR, Q1, Q3, et les seuils d'alerte
     for antibiotic in df.columns[1:]:
-        # Vérifier si la colonne contient des NaN
+        # Vérifier si la colonne contient des NaN ou des valeurs non numériques
+        if df[antibiotic].dtype not in ['float64', 'int64']:
+            continue  # Ignore les colonnes non numériques
+        
         if df[antibiotic].isnull().sum() > 0:
             df[antibiotic] = df[antibiotic].fillna(df[antibiotic].mean())  # Remplacer NaN par la moyenne de la colonne
         
