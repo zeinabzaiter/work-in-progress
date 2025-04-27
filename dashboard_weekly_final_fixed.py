@@ -92,25 +92,7 @@ fig_abx.update_layout(
 
 st.plotly_chart(fig_abx, use_container_width=True)
 
-        int(df["Week"].max()),
-        (int(df["Week"].min()), int(df["Week"].max()))
-    )
-    selected_pheno = st.multiselect(
-        "Phénotypes à afficher",
-        ["MRSA", "VRSA", "Wild", "others"],
-        default=["MRSA", "VRSA", "Wild", "others"]
-    )
-
-df_filtered = df[(df["Week"] >= selected_weeks[0]) & (df["Week"] <= selected_weeks[1])]
-
-colors = {
-    "MRSA": "orange",
-    "VRSA": "red",
-    "Wild": "green",
-    "others": "blue"
-}
-
-# Graphique interactif : Nombre de cas
+# Graphique interactif : Nombre de cas par semaine
 st.subheader("🧪 Nombre de cas par semaine (Interactif)")
 
 fig1 = go.Figure()
@@ -135,7 +117,7 @@ fig1.update_layout(
 )
 st.plotly_chart(fig1, use_container_width=True)
 
-# Graphique interactif : Pourcentage
+# Graphique interactif : Prévalence par semaine
 st.subheader("📊 Prévalence (%) par semaine (Interactif)")
 
 fig2 = go.Figure()
@@ -160,9 +142,7 @@ fig2.update_layout(
 )
 st.plotly_chart(fig2, use_container_width=True)
 
-
 # 🚨 ALERTES
-
 st.subheader("🚨 Alertes de surveillance")
 
 import numpy as np
@@ -177,7 +157,6 @@ if df_filtered["MRSA"].max() > mrsa_threshold:
 
 if vrsa_cases_detected > 0:
     st.error(f"🚨 ALERTE : {vrsa_cases_detected} cas de VRSA détectés dans la période sélectionnée")
-
 
 # Onglet : Autres antibiotiques
 st.subheader("🧬 Autres antibiotiques")
@@ -202,7 +181,6 @@ df_long["Antibiotic"] = df_long["Antibiotic"].str.extract(r'([A-Za-zé]+)', expa
 
 st.markdown("### 📊 Résistance (%R) par antibiotique")
 st.dataframe(df_long.dropna(), use_container_width=True)
-
 
 # 📈 Graphique interactif : évolution de %R par antibiotique
 st.markdown("### 📈 Tendance de la résistance (%R)")
